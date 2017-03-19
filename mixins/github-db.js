@@ -532,6 +532,9 @@ function parseDate(string) {
 }
 
 function encodeDate(date) {
+  if (!date.seconds) {
+    date = parseDate(date.toString());
+  }
   var seconds = date.seconds - (date.offset) * 60;
   var d = new Date(seconds * 1000);
   var string = d.toISOString();
@@ -550,17 +553,6 @@ function encodeDate(date) {
     neg + twoDigit(hours) + ":" + twoDigit(minutes);
   return string;
 }
-
-// Run some quick unit tests to make sure date encoding works.
-[
-  { offset: 300, seconds: 1401938626 },
-  { offset: 400, seconds: 1401938626 }
-].forEach(function (date) {
-  var verify = parseDate(encodeDate(date));
-  if (verify.seconds !== date.seconds || verify.offset !== date.offset) {
-    throw new Error("Verification failure testing date encoding");
-  }
-});
 
 function twoDigit(num) {
   if (num < 10) return "0" + num;
